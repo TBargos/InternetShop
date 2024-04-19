@@ -14,18 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import include, path
+from urllib import request
+from django.urls import path
 
 """
 Импорты представлений из приложений для создания связей
 между ссылкой и обрабатывающей её функцией.
 """
-from main import views
 from goods import views
 
+app_name = 'goods' # для пространства имён в функцию include из app/urls
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls', namespace='main')),
-    path('catalog/', include('goods.urls', namespace='catalog'))
+    path('', views.catalog, name='index'),
+    path('product/', views.product, name='product')
 ]
