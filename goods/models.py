@@ -11,10 +11,10 @@ class Categories(models.Model):
         return self.name
 
     class Meta:     # Ручная корректировка миграции
-        db_table = 'category'   # имя таблицы
+        db_table: str = 'category'   # имя таблицы
         # имена для админ панели
-        verbose_name = 'Категорию' # в единственном числеч
-        verbose_name_plural = 'Категории' # во множественном числе
+        verbose_name: str = 'Категорию' # в единственном числеч
+        verbose_name_plural: str = 'Категории' # во множественном числе
 
 
 class Products(models.Model):
@@ -29,8 +29,17 @@ class Products(models.Model):
     
     def __str__(self) -> str:
         return f'{self.name} Количество - {self.quantity}'
+    
+    def display_id(self) -> str:
+        return f'{self.id:05}'
+
+    def sell_price(self) -> int | float:
+        if self.discount:
+            return round(self.price - self.price*(self.discount/100), 2)
+        
+        return self.price
 
     class Meta:
-        db_table = 'product'
-        verbose_name = 'Продукт'
-        verbose_name_plural = 'Продукты'
+        db_table: str = 'product'
+        verbose_name: str = 'Продукт'
+        verbose_name_plural: str = 'Продукты'
