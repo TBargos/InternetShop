@@ -13,7 +13,7 @@ class Categories(models.Model):
     class Meta:     # Ручная корректировка миграции
         db_table: str = 'category'   # имя таблицы
         # имена для админ панели
-        verbose_name: str = 'Категорию' # в единственном числеч
+        verbose_name: str = 'Категорию' # в единственном числе
         verbose_name_plural: str = 'Категории' # во множественном числе
 
 
