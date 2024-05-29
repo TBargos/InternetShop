@@ -1,11 +1,12 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, render
 
 from goods.models import Products
 
 
-def catalog(request, category_slug: str) -> HttpResponse:
-    """Показывает товары выбранной категории"""
+def catalog(request, category_slug: str, page=1) -> HttpResponse:
+    """Показывает товары выбранной категории или все"""
     if category_slug == 'all':  # все товары
         goods = Products.objects.all()
     else:
@@ -13,10 +14,13 @@ def catalog(request, category_slug: str) -> HttpResponse:
         goods: list[Products] = get_list_or_404(\
             Products.objects.filter(category__slug=category_slug))
     
+    paginator = Paginator(goods, 3)
+    current_page = paginator.page(page)
     
     context = {
         "title": "Home - Каталог",
-        "goods": goods
+        "goods": current_page,
+        "slug_url": category_slug
     }
     return render(request, "goods/catalog.html", context)
 

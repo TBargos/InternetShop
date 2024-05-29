@@ -7,7 +7,7 @@ class Categories(models.Model):
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='URL')
 
     # переопределение метода для понятного отображения инфы по новым объектам в бд (для админки)
-    def __str__(self) -> str:  # вообще этот метод возвращает инфу по экземпляру класса
+    def __str__(self) -> str:  # этот метод возвращает инфу по экземпляру класса
         return self.name
 
     class Meta:     # Ручная корректировка миграции
@@ -43,3 +43,4 @@ class Products(models.Model):
         db_table: str = 'product'
         verbose_name: str = 'Продукт'
         verbose_name_plural: str = 'Продукты'
+        ordering = ("id",) # Сортировка выдачи по умолчанию, нужна для пагинации
