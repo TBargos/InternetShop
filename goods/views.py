@@ -1,12 +1,13 @@
 from django.core.paginator import Paginator
-from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, render
 
 from goods.models import Products
 
 
-def catalog(request, category_slug: str, page=1) -> HttpResponse:
+def catalog(request, category_slug: str):
     """Показывает товары выбранной категории или все"""
+    page = int(request.GET.get('page', 1))
+    
     if category_slug == 'all':  # все товары
         goods = Products.objects.all()
     else:
@@ -25,7 +26,7 @@ def catalog(request, category_slug: str, page=1) -> HttpResponse:
     return render(request, "goods/catalog.html", context)
 
 
-def product(request, product_slug: str) -> HttpResponse:
+def product(request, product_slug: str):
     """Загружает страницу выбранного товара"""
     product: Products = Products.objects.get(slug=product_slug)
     
