@@ -1,39 +1,44 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load goods_tags %}
 
 {% block content %}
     <!-- Контент на странице -->
     <div class="row">
         <!-- Форма фильтров -->
         <div class="dropdown mb-2">
-            <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+            <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown" 
                 aria-expanded="false">
                 Фильтры
             </button>
     
-            <form action="" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+            <form action="{% url "catalog:index" slug_url %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
                 <div class="form-check text-white mx-3">
-                    <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on">
-                    <input type="hidden" name="q" value="request.GET.q">
+                    <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on"
+                    {% if request.GET.on_sale == "on" %} checked {% endif %} >
+                    {% comment %} <input type="hidden" name="q" value="request.GET.q"> {% endcomment %}
                     <label class="form-check-label" for="flexCheckDefault">
                         Товары по акции
                     </label>
                 </div>
                 <p class="text-white mx-3 mt-3">Сортировать:</p>
                 <div class="form-check text-white mx-3">
-                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" checked>
+                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default"
+                    {% if not request.GET.order_by or request.GET.order_by == "default" %} checked {% endif %}>
                     <label class="form-check-label" for="flexRadioDefault1">
                         По умолчанию
                     </label>
                 </div>
                 <div class="form-check text-white mx-3">
-                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price">
+                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price"
+                    {% if request.GET.order_by == "price" %} checked {% endif %}>
                     <label class="form-check-label" for="flexRadioDefault2">
                         От дешевых к дорогим
                     </label>
                 </div>
                 <div class="form-check text-white mx-3">
-                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price">
+                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price"
+                    {% if request.GET.order_by == "-price" %} checked {% endif %}>
                     <label class="form-check-label" for="flexRadioDefault3">
                         От дорогих к дешевым
                     </label>
@@ -88,15 +93,16 @@
                 <li class="page-item {% if not goods.has_previous %} disabled {% endif %}">
                     <a class="page-link" 
                     {% if goods.has_previous %}
-                        href="?page={{ goods.previous_page_number }}"
+                        href="?{% change_params page=goods.previous_page_number %}"
                     {% endif %}">Назад</a>
                 </li>
 
-                {% comment %} На страницу x {% endcomment %}
+                {% comment %} На страницу X {% endcomment %}
                 {% for page in goods.paginator.page_range %}
                     {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
                         <li class="page-item {% if goods.number == page %} active {% endif %}"><a class="page-link" 
-                            href="?page={{ page }}">{{ page }}</a>
+                            {% comment "" %}ниже к данным запроса присоединяется номер целевой страницы и вставляется готовая ссылка{% endcomment %}
+                            href="?{% change_params page=page %}">{{ page }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
@@ -105,7 +111,7 @@
                 <li class="page-item {% if not goods.has_next %} disabled {% endif %}">
                     <a class="page-link" 
                         {% if goods.has_next %}
-                            href="?page={{ goods.next_page_number }}"
+                            href="?{% change_params page=goods.next_page_number %}"
                         {% endif %}>Вперёд</a>
                 </li>
             </div>
